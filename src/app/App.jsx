@@ -1,13 +1,15 @@
-import Myope from "../component/Myope";
+import Adminaction from "../component/Adminaction"
+import Admin from "../pages/Admin.jsx";
 
-
-
+ 
 
 
 export default function App() {
   return (
     <div>
-    <Myope/>
+      <Adminaction/>
+        {/*<Admin/>*/}
+    
     </div>
     
   )
