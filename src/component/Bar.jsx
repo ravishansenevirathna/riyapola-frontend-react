@@ -19,6 +19,13 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import Admin from '../pages/Admin';
+import GetAllCars from './GetAllCars';
+import Button from '@mui/material/Button';
+import routes from '../common/navigation/routes'
+import { Routes,Route,Link,Navigate } from 'react-router-dom';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import CarRentalIcon from '@mui/icons-material/CarRental';
+
 
 const drawerWidth = 240;
 
@@ -89,6 +96,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 
 export default function Bar(){
+
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -99,6 +107,16 @@ export default function Bar(){
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const logOutAction = () => {
+    localStorage.removeItem("stmToken");
+    window.location.reload();
+  }
+
+  const getRoutes = (route) =>
+  route.map((val) =>
+    <Route path={val.path} key={val.key} element={val.component}/>
+  )
 
   return(
 
@@ -121,6 +139,9 @@ export default function Bar(){
         <Typography variant="h6" noWrap component="div">
           Admin
         </Typography>
+
+        <Button  sx={{backgroundColor:'white',marginLeft:125}} onClick={logOutAction} position="fixed">LogOut</Button>
+
       </Toolbar>
     </AppBar>
     <Drawer variant="permanent" open={open}>
@@ -131,8 +152,9 @@ export default function Bar(){
       </DrawerHeader>
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+        {routes.map((val, index) => (
+          <Link to={val.path}>
+            <ListItem key={val.key} disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
@@ -147,64 +169,40 @@ export default function Bar(){
                   justifyContent: 'center',
                 }}
               >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                {index % 2 === 0 ? <CarRentalIcon /> : <DirectionsCarIcon />}
               </ListItemIcon>
-              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText primary={val.name} sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
+          </Link>
+          
         ))}
       </List>
       <Divider />
-      {/* <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List> */}
+      
     </Drawer>
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
       <DrawerHeader />
-      <Typography paragraph>
+
+      <div>
+        <Routes>
+        {getRoutes(routes)}
+        <Route path={"*"} element={<Navigate to={"/reservation"}/>}/>
+        </Routes>
+        
+
+      </div>
 
 
+      {/* <Routes>
+        <Route path="/orderDetails" element={<Bar/>}/>
+        <Route path="/Adminaction" element={<Adminaction/>}/>
+      </Routes> */}
 
-       <Admin/>
+       {/* <Admin/> */}
+       {/* <GetAllCars/> */}
+      
 
-
-
-
-      </Typography>
-      {/* <Typography paragraph>
-        Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
-        eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
-        neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
-        tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
-        sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
-        tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
-        gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
-        et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
-        tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-        eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-        posuere sollicitudin aliquam ultrices sagittis orci a.
-      </Typography> */}
     </Box>
   </Box>
  );
