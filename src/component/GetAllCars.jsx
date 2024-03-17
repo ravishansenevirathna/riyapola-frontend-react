@@ -52,7 +52,7 @@ const getAllCars=()=>{
         <div>
 
             {
-               data.map((val)=>(
+               
                 <div>
                     <Card sx={{ maxWidth: 345 }}>
                 <CardMedia
@@ -61,7 +61,9 @@ const getAllCars=()=>{
                     title="green iguana"
                 />
                 <CardContent>
-                    <TextField/>
+                    <TextField>
+                
+                    </TextField>
 
                     
 
@@ -78,7 +80,7 @@ const getAllCars=()=>{
                 </CardActions>
             </Card>
                 </div>
-               ))
+               
             }
         </div>
     )

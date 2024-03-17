@@ -23,8 +23,7 @@ const routes=[
         path:"/cars",
         component:<GetAllCars/>
     }
-
-
+    
 ];
 
 export default routes;

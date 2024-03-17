@@ -6,30 +6,35 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
 import instance from "../service/ServiceOrder.jsx";
 import {useState} from "react";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+
 
 
 
 export default function Login(){
 
+   
+    const [user, setUserName] = useState("");
+    const [pw,setPassword]=useState("");
     const navigate = useNavigate();
-    const [userName, setUserName] = useState("");
-    const [password,setPassword]=useState("");
 
     const loginAction = () => {
         instance.post('/admin/login', {
-            userName: userName,
-            password: password
+            userName: user,
+            password: pw
         })
             .then(function (response) {
                 console.log(response.data.token);
+
                 
                 localStorage.setItem('stmToken',response.data.token);
+                if(response.data.token != null){
+                    navigate("/login");
+                }
                 window.location.reload();
-                // navigate('/orderDetails')
+               
             })
             .catch(function (error) {
                 console.log(error);
