@@ -41,7 +41,7 @@ export default function Adminaction() {
         data.append('fuelType', car_fuel)
         data.append('imageName', car_image)
 
-        instance.post("/car/addnewcar", data, {
+        instance.post("/car/addNewCar", data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

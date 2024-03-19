@@ -18,6 +18,7 @@ export default function App() {
     const key = localStorage.getItem("stmToken")
     console.log(key);
     if(key !== null){
+      // if(key !== null){
       setLogin(true);
     }
     else{

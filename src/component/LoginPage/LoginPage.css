@@ -1,0 +1,9 @@
+.backgroundImg{
+    background-image:url("src/assets/gg5.jpg");
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    /* margin: 0; */
+    z-index: -1;
+}

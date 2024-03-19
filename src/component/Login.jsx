@@ -1,15 +1,14 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import instance from "../service/ServiceOrder.jsx";
 import {useState} from "react";
-import { useNavigate } from 'react-router-dom';
-
+import { InputAdornment ,IconButton, Hidden } from '@mui/material'; 
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import '../component/LoginPage/LoginPage.css'
 
 
 
@@ -18,21 +17,17 @@ export default function Login(){
    
     const [user, setUserName] = useState("");
     const [pw,setPassword]=useState("");
-    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(true);
 
     const loginAction = () => {
         instance.post('/admin/login', {
             userName: user,
             password: pw
         })
-            .then(function (response) {
-                console.log(response.data.token);
-
-                
+            .then(function (response) {            
                 localStorage.setItem('stmToken',response.data.token);
-                if(response.data.token != null){
-                    navigate("/login");
-                }
+                console.log(localStorage.getItem("stmToken"))
+                
                 window.location.reload();
                
             })
@@ -43,8 +38,9 @@ export default function Login(){
 
 
     return(
-        <div>
-            <Card sx={{ maxWidth: 345 , left:'0px', right:'0px', margin:' 12% auto', padding:'20px' ,display:'flex', flexDirection:'column', justifyContent:'center' , alignItems:"center" , boxShadow:'0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
+        <Box sx={{display: 'flex', height: '97vh', justifyContent: 'center', alignItems: 'center'}}>
+            <div className='backgroundImg'></div>
+            <Card sx={{ maxWidth: 345 , left:'0px', right:'0px' ,padding: 3,display:'flex', flexDirection:'column', justifyContent:'center' , alignItems:"center" , boxShadow:'0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)'}}>
 
 
                     <Typography gutterBottom variant="h5" component="div">
@@ -59,9 +55,29 @@ export default function Login(){
                             noValidate
                             autoComplete="off"
                         >
-                            <TextField onChange={(val)=> setUserName(val.target.value)} id="outlined-basic" label="Enter Your User Name" variant="outlined" />
+                            <TextField  onChange={(val)=> setUserName(val.target.value)} id="outlined-basic" label="Enter Your User Name" variant="outlined" />
                             <br/><br/>
-                            <TextField onChange={(val)=> setPassword(val.target.value)} id="outlined-basic" label="Enter Your Password" variant="outlined" />
+                            {/* <TextField onChange={(val)=> setPassword(val.target.value)} id="outlined-basic" label="Enter Your Password" variant="outlined" /> */}
+
+                            <TextField
+                                onChange={(event) => setPassword(event.target.value)} // Use event.target.value
+                                id="outlined-password-input"
+                                label="Enter Your Password"
+                                type={!showPassword ? 'text' : 'password'}
+                                value={pw} // Add value for controlled component
+                                InputProps={{
+                                endAdornment: (
+                                <InputAdornment position="end">
+                                <IconButton
+                                onClick={() => setShowPassword(!showPassword)}
+                                edge="end"
+                                >
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                                </InputAdornment>
+                                ),
+                                }}
+                            />
                         </Box>
                     </Typography>
 
@@ -69,6 +85,6 @@ export default function Login(){
                     <Button sx={{borderRadius:"90px",width: '30ch', marginTop:'20px'}} variant="contained" color="secondary" onClick={()=>loginAction()}>Login</Button>
 
             </Card>
-        </div>
+        </Box>
     )
 }

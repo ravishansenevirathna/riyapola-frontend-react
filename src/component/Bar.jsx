@@ -16,13 +16,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import Admin from '../pages/Admin';
-import GetAllCars from './GetAllCars';
 import Button from '@mui/material/Button';
 import routes from '../common/navigation/routes'
-import { Routes,Route,Link,Navigate } from 'react-router-dom';
+import { Routes, Route, Link, Navigate } from 'react-router-dom';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import CarRentalIcon from '@mui/icons-material/CarRental';
 
@@ -95,7 +91,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 
-export default function Bar(){
+export default function Bar() {
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -114,97 +110,95 @@ export default function Bar(){
   }
 
   const getRoutes = (route) =>
-  route.map((val) =>
-    <Route path={val.path} key={val.key} element={val.component}/>
-  )
+    route.map((val) =>
+      <Route path={val.path} key={val.key} element={val.component} />
+    )
 
-  return(
+  return (
 
     <Box sx={{ display: 'flex' }}>
-    <CssBaseline />
-    <AppBar sx={{backgroundColor:'purple'}} position="fixed" open={open}>
-      <Toolbar>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          onClick={handleDrawerOpen}
-          edge="start"
-          sx={{
-            marginRight: 5,
-            ...(open && { display: 'none' }),
-          }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          Admin
-        </Typography>
+      <CssBaseline />
+      <AppBar sx={{ backgroundColor: 'purple' }} position="fixed" open={open}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={{
+              marginRight: 5,
+              ...(open && { display: 'none' }),
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div">
+            Admin Panal
+          </Typography>
 
-        <Button  sx={{backgroundColor:'white',marginLeft:125}} onClick={logOutAction} position="fixed">LogOut</Button>
+          <Button sx={{ backgroundColor: 'white', marginLeft: 125,position:"fixed" }} onClick={logOutAction}>LogOut</Button>
 
-      </Toolbar>
-    </AppBar>
-    <Drawer variant="permanent" open={open}>
-      <DrawerHeader>
-        <IconButton onClick={handleDrawerClose}>
-          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-        </IconButton>
-      </DrawerHeader>
-      <Divider />
-      <List>
-        {routes.map((val, index) => (
-          <Link to={val.path}>
-            <ListItem key={val.key} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                {index % 2 === 0 ? <CarRentalIcon /> : <DirectionsCarIcon />}
-              </ListItemIcon>
-              <ListItemText primary={val.name} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
-          </Link>
-          
-        ))}
-      </List>
-      <Divider />
-      
-    </Drawer>
-    <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-      <DrawerHeader />
+        </Toolbar>
+      </AppBar>
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List>
+          {routes.map((val, index) => (
+            <Link to={val.path}>
+              <ListItem key={val.key} disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
+                  }}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {index % 2 === 0 ? <CarRentalIcon /> : <DirectionsCarIcon />}
+                  </ListItemIcon>
+                  <ListItemText primary={val.name} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
 
-      <div>
-        <Routes>
-        {getRoutes(routes)}
-        <Route path={"*"} element={<Navigate to={"/reservation"}/>}/>
-        </Routes>
-        
+          ))}
+        </List>
+        <Divider />
 
-      </div>
+      </Drawer>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <DrawerHeader />
+
+        <div>
+          <Routes>
+            {getRoutes(routes)}
+            <Route path={"*"} element={<Navigate to={"/reservation"} />} />
+          </Routes>
 
 
-      {/* <Routes>
+        </div>
+
+
+        {/* <Routes>
         <Route path="/orderDetails" element={<Bar/>}/>
         <Route path="/Adminaction" element={<Adminaction/>}/>
       </Routes> */}
 
-       {/* <Admin/> */}
-       {/* <GetAllCars/> */}
-      
-
+        {/* <Admin/> */}
+        {/* <GetAllCars/> */}
+      </Box>
     </Box>
-  </Box>
- );
- 
+  );
+
 }
