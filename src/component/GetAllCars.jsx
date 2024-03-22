@@ -6,25 +6,26 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import instance from '../service/ServiceOrder';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import DialogBox from './DialogBox/DialogBox';
 
 
 export default function GetAllCars() {
+    const [openAlert, setOpenAlert] = useState(false)
+    const [selectedCar, setSelectedCar] = useState({});
 
-    const [open, setOpen] = React.useState(false);
+    const [handleOpen, sethandleOpen]= useState(true)
+
+    const handleOpenUpAlert = (car) => {
+        setSelectedCar(car);
+         setOpenAlert(true)
+    }
+
+
+
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-
-    const handleClose = () => {
-        setOpen(false);
-    };
 
 
     useEffect(() => {
@@ -59,10 +60,7 @@ export default function GetAllCars() {
             });
     };
 
-    const updateCar = () => {
-        setOpen(true);
-
-    }
+    
 
 
     const deleteCar = () => {
@@ -94,35 +92,7 @@ export default function GetAllCars() {
                             </Typography>
                         </CardContent>
                         <CardActions>
-                            <Button variant="contained" color="success" onClick={() => updateCar(car)} >Update</Button>
-
-                    {/* this is Dialog Box */}
-
-                            <Dialog 
-                                fullScreen={fullScreen}
-                                open={open}
-                                onClose={handleClose}
-                                aria-labelledby="responsive-dialog-title"
-                            >
-                                <DialogTitle id="responsive-dialog-title">
-                                    {"Use Google's location service?"}
-                                </DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        <textarea>{car.carModel}</textarea>
-                                    </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button autoFocus onClick={handleClose}>
-                                        Disagree
-                                    </Button>
-                                    <Button onClick={handleClose} autoFocus>
-                                        Agree
-                                    </Button>
-                                </DialogActions>
-                            </Dialog>
-
-                            {/* End of the dialog box */}
+                            <Button variant="contained" color="success" onClick={()=>{handleOpenUpAlert(car)}} >Update</Button>
 
                             <Button variant="outlined" color="error" onClick={deleteCar}>Delete</Button>
                         </CardActions>
@@ -130,6 +100,18 @@ export default function GetAllCars() {
                 </div>
 
             ))}
+
+            {openAlert && 
+            <DialogBox
+            handleClose={() => {setOpenAlert(false)} }
+            open={openAlert}
+            car={selectedCar}
+            />
+            }
+        
+        
+            
+            
         </div>
     );
 }

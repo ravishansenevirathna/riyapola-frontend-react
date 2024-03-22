@@ -81,14 +81,15 @@ export default function Adminaction() {
 
     return (
         <div>
-            <Box
-                component="form"
-                sx={{
-                    '& > :not(style)': { m: 2, width: '60ch' },
-                }}
-                noValidate
-                autoComplete="off"
-            >
+             <Box
+            component="form"
+            sx={{
+                '& > :not(style)': { m: 2, width: '60ch' },display:'flex',justifyContent:'center',alignItems:'center',
+                flexDirection:'column'
+
+            }}
+            noValidate
+            autoComplete="off">
                 <TextField onChange={(val) => setBrand(val.target.value)} id="outlined-basic" label="Enter Car Brand" variant="outlined" />
                 <TextField onChange={(val) => setModel(val.target.value)} id="outlined-basic" label="Enter Car Model" variant="outlined" />
                 <TextField onChange={(val) => setYear(val.target.value)} id="outlined-basic" label="Enter Car Year" variant="outlined" />

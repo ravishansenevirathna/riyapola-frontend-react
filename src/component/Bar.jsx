@@ -135,8 +135,10 @@ export default function Bar() {
           <Typography variant="h6" noWrap component="div">
             Admin Panal
           </Typography>
-
-          <Button sx={{ backgroundColor: 'white', marginLeft: 125,position:"fixed" }} onClick={logOutAction}>LogOut</Button>
+          <div style={{width: "100%", display: 'flex', justifyContent: 'end'}}>
+          <Button sx={{ backgroundColor: 'white', marginLeft: 12, }} onClick={logOutAction}>LogOut</Button>
+          </div>
+          
 
         </Toolbar>
       </AppBar>
