@@ -1,6 +1,8 @@
 import Adminaction from "../../component/Adminaction"
+import Customer from "../../component/CustomerPage/Customer";
 import GetAllCars from "../../component/GetAllCars"
 import Admin from "../../pages/Admin"
+
 
 
 
@@ -12,17 +14,25 @@ const routes=[
         component:<Admin/>
     },
     {
-        name:"Add Car",
+        name:"Add New Car",
         key:"Adminaction",
         path:"/addCar",
         component:<Adminaction/>
     },
     {
-        name:"Available Cars",
+        name:"All Cars",
         key:"GetAllCars",
         path:"/cars",
         component:<GetAllCars/>
+    },
+    {
+        name:"Customers",
+        key:"Customer",
+        path:"/customers",
+        component:<Customer/>
     }
+
+
     
 ];
 

@@ -169,6 +169,8 @@ export default function Bar() {
                   >
                     {index % 2 === 0 ? <CarRentalIcon /> : <DirectionsCarIcon />}
                   </ListItemIcon>
+                  
+
                   <ListItemText primary={val.name} sx={{ opacity: open ? 1 : 0 }} />
                 </ListItemButton>
               </ListItem>
@@ -191,14 +193,6 @@ export default function Bar() {
 
         </div>
 
-
-        {/* <Routes>
-        <Route path="/orderDetails" element={<Bar/>}/>
-        <Route path="/Adminaction" element={<Adminaction/>}/>
-      </Routes> */}
-
-        {/* <Admin/> */}
-        {/* <GetAllCars/> */}
       </Box>
     </Box>
   );

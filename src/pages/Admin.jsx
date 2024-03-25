@@ -1,5 +1,9 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import GroupsIcon from '@mui/icons-material/Groups';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import BookOnlineIcon from '@mui/icons-material/BookOnline';
 
 const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -39,6 +43,16 @@ export default function Admin() {
     return (
 
         <div style={{ height: 400, width: '100%' }}>
+            <Box sx={{ boxShadow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '12px 15px', borderBottom: '1px solid #ddd',   background: `linear-gradient(to right, #d3d3e3, #c0c0d9)`,  }}>
+                <BookOnlineIcon sx={{ fontSize: 40, marginRight: 10, color:"primary.main" }}  />
+                <Typography variant="h4" component="h1" fontWeight="bold" color="primary.main">
+                    Reservations
+                </Typography>
+                <BookOnlineIcon sx={{ fontSize: 40, marginLeft: 10, color:"primary.main" }}/>
+               
+            </Box>
+            <br />
+            
             <DataGrid
                 rows={rows}
                 columns={columns}

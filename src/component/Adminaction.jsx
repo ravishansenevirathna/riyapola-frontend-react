@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextField } from '@mui/material';
+import { Grid, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -8,6 +8,9 @@ import { useState } from "react";
 import Swal from 'sweetalert2'
 import instance from "../service/ServiceOrder.jsx";
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+
 
 
 const VisuallyHiddenInput = styled('input')({
@@ -60,14 +63,56 @@ export default function Adminaction() {
 
     };
 
+
+    // const clear = () => {
+    //     Swal.fire({
+    //         title: 'Are You sure?',
+    //         text: 'Your data will be lost!',
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'Yes, clear it!',
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             setBrand("");
+    //             setModel("");
+    //             setYear('');
+    //             setEngineCap("");
+    //             setFuel("");
+    //             setImage(null);
+    //             setImg(null);
+    //         }
+    //     });
+    // };
+
     const clear = () => {
         Swal.fire({
-            title:'Are You sure?',
-            text:"Your data will be lost!",
-            icon:"warning",
-        })
-    }
+            title: 'Are You sure?',
+            text: 'Your data will be lost!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, clear it!',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setBrand("");
+                setModel("");
+                setYear("");
+                setEngineCap("");
+                setFuel("");
+                setImage(null);
+                setImg(null);
 
+
+                const form = document.querySelector('form');
+                if (form) {
+                    form.reset();
+                }
+            }
+        });
+    };
 
 
 
@@ -81,24 +126,71 @@ export default function Adminaction() {
 
     return (
         <div>
-             <Box
-            component="form"
-            sx={{
-                '& > :not(style)': { m: 2, width: '60ch' },display:'flex',justifyContent:'center',alignItems:'center',
-                flexDirection:'column'
-
-            }}
-            noValidate
-            autoComplete="off">
-                <TextField onChange={(val) => setBrand(val.target.value)} id="outlined-basic" label="Enter Car Brand" variant="outlined" />
-                <TextField onChange={(val) => setModel(val.target.value)} id="outlined-basic" label="Enter Car Model" variant="outlined" />
-                <TextField onChange={(val) => setYear(val.target.value)} id="outlined-basic" label="Enter Car Year" variant="outlined" />
-                <TextField onChange={(val) => setEngineCap(val.target.value)} id="outlined-basic" label="Enter Car Engine Capacity" variant="outlined" />
-                <TextField onChange={(val) => setFuel(val.target.value)} id="outlined-basic" label="Enter Car Fuel Type" variant="outlined" />
-
-
+            <Box sx={{ boxShadow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '12px 15px', borderBottom: '1px solid #ddd',   background: `linear-gradient(to right, #d3d3e3, #c0c0d9)`,  }}>
+                <DirectionsCarIcon sx={{ fontSize: 40, marginRight: 10, color:"primary.main" }}  />
+                <Typography variant="h4" component="h1" fontWeight="bold" color="primary.main">
+                    Add New Car
+                </Typography>
+                <DirectionsCarIcon sx={{ fontSize: 40, marginLeft: 10, color:"primary.main" }}/>
+               
+            </Box>
+            <br />
+            <Box
+                component="form"
+                sx={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                    gap: 3,
+                    // Other spacing adjustments as needed
+                }}
+                noValidate
+                autoComplete="off"
+            >
+                <Grid item xs={6}>
+                    <TextField
+                        label="Enter Car Brand"
+                        variant="outlined"
+                        fullWidth
+                        onChange={(val) => setBrand(val.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Enter Car Model"
+                        variant="outlined"
+                        fullWidth
+                        onChange={(val) => setModel(val.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Enter Car Year"
+                        variant="outlined"
+                        fullWidth
+                        onChange={(val) => setYear(val.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Enter Car Engine Capacity"
+                        variant="outlined"
+                        fullWidth
+                        onChange={(val) => setEngineCap(val.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={6}>
+                    <TextField
+                        label="Enter Car Fuel Type"
+                        variant="outlined"
+                        fullWidth
+                        onChange={(val) => setFuel(val.target.value)}
+                    />
+                </Grid>
 
             </Box>
+            <br />
+
+
             <div>
                 <Button
                     component="label"
@@ -117,12 +209,11 @@ export default function Adminaction() {
 
 
             </div>
-
             <br />
-          
+
             <Stack direction="row" spacing={120}>
-            <Button onClick={save} color="success" variant="contained">Save</Button>
-            <Button onClick={clear} variant="outlined" color="error">Clear</Button>
+                <Button onClick={save} color="success" variant="contained">Save</Button>
+                <Button onClick={clear} variant="outlined" color="error">Clear</Button>
             </Stack>
 
 
