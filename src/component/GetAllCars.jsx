@@ -12,6 +12,7 @@ import { useTheme } from '@mui/material/styles';
 import DialogBox from './DialogBox/DialogBox';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import Box from '@mui/material/Box';
+import Swal from 'sweetalert2'
 
 
 export default function GetAllCars() {
@@ -47,7 +48,7 @@ export default function GetAllCars() {
         const array = [];
         response.data.forEach((val) => {
           array.push({
-            carId: val.id,
+            carId: val.carId,
             carBrand: val.brand,
             carModel: val.model,
             carYear: val.year,
@@ -66,26 +67,56 @@ export default function GetAllCars() {
 
 
 
+  // const deleteCar = (carId) => {
+
+
+  //   instance({
+  //     method: 'delete',
+  //     url: '/car/deleteCar/' + carId,
+  //   })
+  //     .then(function (response) {
+  //       console.log("fgfgfgfgfgfgf");
+  //       console.log(response);
+
+
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+
+
+  // }
+
+
   const deleteCar = (carId) => {
-
-
-    instance({
-      method: 'delete',
-      url: '/car/deleteCar/' + carId,
-    })
-      .then(function (response) {
-        console.log("fgfgfgfgfgfgf");
-        console.log(response);
-
-
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-
-  }
-
+    Swal.fire({
+        title: 'Are You sure?',
+        text: 'Your data will be lost!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+          instance({
+                method: 'delete',
+                url: '/car/deleteCar/' + carId,
+              })
+                .then(function (response) {
+                  console.log("fgfgfgfgfgfgf");
+                  console.log(response);
+                  getAllCars()
+          
+          
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+            
+        }
+    });
+};
 
 
   return (
@@ -106,7 +137,7 @@ export default function GetAllCars() {
             <Card sx={{ maxWidth: 370, minWidth: 370 }}> {/* Set minimum width for smaller screens */}
               <CardMedia
                 sx={{ height: 220, display: 'block' }}
-                image={`http://localhost:8080/${car.carImageName}`}
+                 image={`http://localhost:8080/${car.carImageName}`}
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">

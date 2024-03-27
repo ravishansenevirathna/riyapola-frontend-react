@@ -132,7 +132,7 @@ export default function Bar() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography sx={{fontWeight: 'bold',textDecoration: 'none'}}  variant="h6" noWrap component="div">
             Admin Panal
           </Typography>
           <div style={{width: "100%", display: 'flex', justifyContent: 'end'}}>
@@ -151,7 +151,7 @@ export default function Bar() {
         <Divider />
         <List>
           {routes.map((val, index) => (
-            <Link to={val.path}>
+            <Link style={{textDecoration:'none'}} to={val.path}>
               <ListItem key={val.key} disablePadding sx={{ display: 'block' }}>
                 <ListItemButton
                   sx={{
@@ -171,7 +171,7 @@ export default function Bar() {
                   </ListItemIcon>
                   
 
-                  <ListItemText primary={val.name} sx={{ opacity: open ? 1 : 0 }} />
+                  <ListItemText primary={val.name} sx={{color: 'purple',  opacity: open ? 1 : 0 , textDecoration:'none'}} />
                 </ListItemButton>
               </ListItem>
             </Link>

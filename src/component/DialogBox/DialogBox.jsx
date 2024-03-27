@@ -60,8 +60,7 @@ export default function DialogBox({ open, handleClose, car }) {
     const [carYear, setYear] = useState(car?.carYear || '');
     const [carEngineCap, setEngineCap] = useState(car?.carEngineCap || '');
     const [carFuel, setFuel] = useState(car?.carFuelType || '');
-    // const [image, setImage] = useState(null);
-
+    const [car_image, setImage] = useState("");
 
     const saveUpdate = (car) => {
 
@@ -74,10 +73,10 @@ export default function DialogBox({ open, handleClose, car }) {
         data.append('engineCap', carEngineCap)
         data.append('fuelType', carFuel)
         if (img) { // Check if there's an image selected
-            data.append('imageName', img); // Include image if available
+            data.append('imageName', car_image); // Include image if available
         }
 
-        const url = `/updateCar/${car.carId}`;
+        const url = `car/updateCar/${car.carId}`;
 
 
         instance.put(url, data, {
@@ -94,9 +93,16 @@ export default function DialogBox({ open, handleClose, car }) {
                     text: "Your work has been saved!",
                     icon: "success",
                 })
+                
             })
             .catch(function (error) {
+                console.log("image ekk dann");
                 console.log(error);
+                Swal.fire({
+                    title: 'Error',
+                    text: "Please upload an Image!",
+                    icon: "error",
+                })
             });
 
 
