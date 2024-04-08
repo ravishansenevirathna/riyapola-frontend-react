@@ -38,6 +38,7 @@ export default function GetAllCars() {
 
 
   const [data, setData] = useState([]);
+  
 
   const getAllCars = () => {
     instance({
@@ -45,8 +46,10 @@ export default function GetAllCars() {
       url: '/car/getAllCars',
     })
       .then((response) => {
+        console.log(response.data)
         const array = [];
         response.data.forEach((val) => {
+           
           array.push({
             carId: val.carId,
             carBrand: val.brand,
@@ -54,10 +57,12 @@ export default function GetAllCars() {
             carYear: val.year,
             carEngineCap: val.engineCap,
             carFuelType: val.fuelType,
-            carImageName: val.imageName,
+            carImageName: val.images[0].imageName,
+            carImageId:val.images[0].imageId
           });
         });
         setData(array);
+        console.log("array is ", array);
       })
       .catch((error) => {
         console.error('Error fetching cars:', error);
@@ -67,56 +72,35 @@ export default function GetAllCars() {
 
 
 
-  // const deleteCar = (carId) => {
-
-
-  //   instance({
-  //     method: 'delete',
-  //     url: '/car/deleteCar/' + carId,
-  //   })
-  //     .then(function (response) {
-  //       console.log("fgfgfgfgfgfgf");
-  //       console.log(response);
-
-
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-
-
-  // }
-
-
   const deleteCar = (carId) => {
     Swal.fire({
-        title: 'Are You sure?',
-        text: 'Your data will be lost!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
+      title: 'Are You sure?',
+      text: 'Your data will be lost!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
     }).then((result) => {
-        if (result.isConfirmed) {
-          instance({
-                method: 'delete',
-                url: '/car/deleteCar/' + carId,
-              })
-                .then(function (response) {
-                  console.log("fgfgfgfgfgfgf");
-                  console.log(response);
-                  getAllCars()
-          
-          
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-            
-        }
+      if (result.isConfirmed) {
+        instance({
+          method: 'delete',
+          url: '/car/deleteCar/' + carId,
+        })
+          .then(function (response) {
+            console.log("fgfgfgfgfgfgf");
+            console.log(response);
+            getAllCars()
+
+
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+      }
     });
-};
+  };
 
 
   return (
@@ -130,14 +114,14 @@ export default function GetAllCars() {
 
       </Box>
       <br />
-      
+
       <Grid container spacing={2} alignItems="flex-start"> {/* Use Grid for layout */}
         {data.map((car) => (
           <Grid item xs={12} sm={6} md={4} key={car.carId}> {/* Responsive grid distribution */}
             <Card sx={{ maxWidth: 370, minWidth: 370 }}> {/* Set minimum width for smaller screens */}
               <CardMedia
                 sx={{ height: 220, display: 'block' }}
-                 image={`http://localhost:8080/${car.carImageName}`}
+                image={`http://localhost:8080/${car.carImageName}`}
               />
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">

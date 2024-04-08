@@ -34,23 +34,70 @@ export default function Adminaction() {
     const [car_image, setImage] = useState("");
 
 
-    const save = () => {
-        const data = new FormData();
+    // const save = () => {
+    //     const data = new FormData();
 
-        data.append('brand', car_brand)
-        data.append('model', car_model)
-        data.append('year', car_year)
-        data.append('engineCap', car_engineCap)
-        data.append('fuelType', car_fuel)
-        data.append('imageName', car_image)
+    //     data.append('brand', car_brand)
+    //     data.append('model', car_model)
+    //     data.append('year', car_year)
+    //     data.append('engineCap', car_engineCap)
+    //     data.append('fuelType', car_fuel)
+    //     data.append('imageName', car_image)
 
-        instance.post("/car/addNewCar", data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+    //     instance.post("/car/addNewCar", data, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data'
+    //         }
+    //     })
+    //         .then(function (response) {
+    //             console.log(response);
+    //             Swal.fire({
+    //                 title: 'Saved',
+    //                 text: "Your work has been saved!",
+    //                 icon: "success",
+    //             })
+    //         })
+    //         .catch(function (error) {
+    //             console.log(error);
+    //         });
+
+    // };
+
+
+    const carSave = () => {
+
+        instance.post("/car/addNewCar",{
+
+            brand:car_brand,
+            model:car_model,
+            year:car_year,
+            engineCap:car_engineCap,
+            fuelType:car_fuel
+
+            
         })
             .then(function (response) {
                 console.log(response);
+                const carIdForImage = response.data.carId;
+                console.log(response.data.carId);
+
+                const data = new FormData();
+                data.append('imageName', car_image)
+                data.append('carId', carIdForImage)
+
+                instance.post("/carImage/addNewCarImage", data, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        })
+                        .then(function (response) {
+                            console.log("image response "+response);
+                        })
+
+                        .catch(function (error) {
+                            console.log("image error is "+ error);
+                        });
+
                 Swal.fire({
                     title: 'Saved',
                     text: "Your work has been saved!",
@@ -58,33 +105,14 @@ export default function Adminaction() {
                 })
             })
             .catch(function (error) {
-                console.log(error);
+                console.log("car details uploading error is " + error);
             });
 
     };
 
 
-    // const clear = () => {
-    //     Swal.fire({
-    //         title: 'Are You sure?',
-    //         text: 'Your data will be lost!',
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#3085d6',
-    //         cancelButtonColor: '#d33',
-    //         confirmButtonText: 'Yes, clear it!',
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //             setBrand("");
-    //             setModel("");
-    //             setYear('');
-    //             setEngineCap("");
-    //             setFuel("");
-    //             setImage(null);
-    //             setImg(null);
-    //         }
-    //     });
-    // };
+
+
 
     const clear = () => {
         Swal.fire({
@@ -212,7 +240,7 @@ export default function Adminaction() {
             <br />
 
             <Stack direction="row" spacing={120}>
-                <Button onClick={save} color="success" variant="contained">Save</Button>
+                <Button onClick={carSave} color="success" variant="contained">Save</Button>
                 <Button onClick={clear} variant="outlined" color="error">Clear</Button>
             </Stack>
 

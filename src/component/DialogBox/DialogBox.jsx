@@ -61,170 +61,182 @@ export default function DialogBox({ open, handleClose, car }) {
     const [carEngineCap, setEngineCap] = useState(car?.carEngineCap || '');
     const [carFuel, setFuel] = useState(car?.carFuelType || '');
     const [car_image, setImage] = useState("");
+    const [car_image_id, setImageId] = useState(car?.carImageId || '')
+
+
 
     const saveUpdate = (car) => {
 
+        instance.put(`car/updateCar/${car.carId}`, {
 
-        const data = new FormData();
-
-        data.append('brand', carBrand)
-        data.append('model', carModel)
-        data.append('year', carYear)
-        data.append('engineCap', carEngineCap)
-        data.append('fuelType', carFuel)
-        if (img) { // Check if there's an image selected
-            data.append('imageName', car_image); // Include image if available
-        }
-
-        const url = `car/updateCar/${car.carId}`;
-
-
-        instance.put(url, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+            brand: carBrand,
+            model: carModel,
+            year: carYear,
+            engineCap: carEngineCap,
+            fuelType: carFuel
 
         })
+
             .then(function (response) {
-                console.log("work")
                 console.log(response);
-                Swal.fire({
-                    title: 'Saved',
-                    text: "Your work has been saved!",
-                    icon: "success",
+                console.log(response.data.carId);
+
+                const data = new FormData();
+                data.append('image_name', img)
+                data.append('carId', car.carId)
+
+                if (img) { // Check if there's an image selected
+                    data.append('imageName', car_image); // Include image if available
+                }
+                const url = `carImage/updateCarImage/${car.carImageId}`;
+                instance.put(url, data, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+
                 })
-                
-            })
-            .catch(function (error) {
-                console.log("image ekk dann");
-                console.log(error);
-                Swal.fire({
-                    title: 'Error',
-                    text: "Please upload an Image!",
-                    icon: "error",
+                    .then(function (response) {
+                        console.log("work")
+                        console.log(response);
+
+                        Swal.fire({
+                            title: 'Saved',
+                            text: "Your work has been saved!",
+                            icon: "success",
+                        })
+
+                    })
                 })
-            });
+                    .catch(function (error) {
+                        console.log("image ekk dann");
+                        console.log(error);
+                        Swal.fire({
+                            title: 'Error',
+                            text: "Please upload an Image!",
+                            icon: "error",
+                        })
+                    });
+
+                console.log('Car details:', {
+                    carBrand,
+                    carModel,
+                    carYear,
+                    carEngineCap,
+                    carFuel,
+                    img,
+                });
+                handleClose();
+            };
 
 
 
 
-        console.log('Car details:', {
-            carBrand,
-            carModel,
-            carYear,
-            carEngineCap,
-            carFuel,
-            img,
-        });
-        handleClose();
-    };
-
-    const handleClear = () => {
-        setBrand('');
-        setModel('');
-        setYear('');
-        setEngineCap('');
-        setFuel('');
-        setImage(null); // Clear image preview
-    };
+        const handleClear = () => {
+            setBrand('');
+            setModel('');
+            setYear('');
+            setEngineCap('');
+            setFuel('');
+            setImage(null); // Clear image preview
+        };
 
 
-    const [img, setImg] = useState();
-    const changeImage = (val) => {
-        console.log(val.target.files[0])
-        setImg(URL.createObjectURL(val.target.files[0]))
-        setImage(val.target.files[0])
+        const [img, setImg] = useState();
+        const changeImage = (val) => {
+            console.log(val.target.files[0])
+            setImg(URL.createObjectURL(val.target.files[0]))
+            setImage(val.target.files[0])
+        }
+
+        return (
+
+            <React.Fragment>
+                <StyledDialog open={open} onClose={handleClose}>
+                    <DialogTitle onClose={handleClose}>
+                        <Typography variant="h6">Manage Car Details</Typography>
+                    </DialogTitle>
+                    <DialogContent>
+                        <StyledTextField  // Use StyledTextField for consistent styling
+                            autoFocus
+                            margin="dense"
+                            id="carBrand"
+                            label="Car Brand"
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            value={carBrand}
+                            onChange={(event) => setBrand(event.target.value)}
+                        />
+                        <StyledTextField  // Use StyledTextField for consistent styling
+                            margin="dense"
+                            id="carModel"
+                            label="Car Model"
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            value={carModel}
+                            onChange={(event) => setModel(event.target.value)}
+                        />
+                        <StyledTextField  // Use StyledTextField for consistent styling
+                            margin="dense"
+                            id="carYear"
+                            label="Car Year"
+                            type="number"
+                            fullWidth
+                            variant="outlined"
+                            value={carYear}
+                            onChange={(event) => setYear(event.target.value)}
+                        />
+
+                        <StyledTextField  // Use StyledTextField for consistent styling
+                            margin="dense"
+                            id="carEngineCap"
+                            label="Car EngineCap "
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            value={carEngineCap}
+                            onChange={(event) => setEngineCap(event.target.value)}
+                        />
+
+                        <StyledTextField  // Use StyledTextField for consistent styling
+                            margin="dense"
+                            id="carFuel"
+                            label="Car Fuel "
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            value={carFuel}
+                            onChange={(event) => setFuel(event.target.value)}
+                        />
+
+                        <div>
+                            <Button
+                                component="label"
+                                role={undefined}
+                                variant="contained"
+                                tabIndex={-1}
+                                startIcon={<CloudUploadIcon />}
+                                onChange={changeImage}
+                                sx={{ display: 'flex', justifyContent: 'space-between' }}
+                            >
+                                Upload image
+                                <VisuallyHiddenInput type="file" />
+                            </Button>
+
+                            <img src={img} width={"40%"} height={"60%"} alt="" />
+
+                        </div>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Button color="success" variant="contained" onClick={() => saveUpdate(car)} sx={{ marginRight: 30 }}>Save</Button>
+                            <Button variant="outlined" color="error" onClick={handleClear}>Clear</Button>
+                        </Box>
+
+
+                    </DialogContent>
+
+                </StyledDialog>
+            </React.Fragment>
+
+        )
     }
-
-    return (
-
-        <React.Fragment>
-            <StyledDialog open={open} onClose={handleClose}>
-                <DialogTitle onClose={handleClose}>
-                    <Typography variant="h6">Manage Car Details</Typography>
-                </DialogTitle>
-                <DialogContent>
-                    <StyledTextField  // Use StyledTextField for consistent styling
-                        autoFocus
-                        margin="dense"
-                        id="carBrand"
-                        label="Car Brand"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={carBrand}
-                        onChange={(event) => setBrand(event.target.value)}
-                    />
-                    <StyledTextField  // Use StyledTextField for consistent styling
-                        margin="dense"
-                        id="carModel"
-                        label="Car Model"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={carModel}
-                        onChange={(event) => setModel(event.target.value)}
-                    />
-                    <StyledTextField  // Use StyledTextField for consistent styling
-                        margin="dense"
-                        id="carYear"
-                        label="Car Year"
-                        type="number"
-                        fullWidth
-                        variant="outlined"
-                        value={carYear}
-                        onChange={(event) => setYear(event.target.value)}
-                    />
-
-                    <StyledTextField  // Use StyledTextField for consistent styling
-                        margin="dense"
-                        id="carEngineCap"
-                        label="Car EngineCap "
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={carEngineCap}
-                        onChange={(event) => setEngineCap(event.target.value)}
-                    />
-
-                    <StyledTextField  // Use StyledTextField for consistent styling
-                        margin="dense"
-                        id="carFuel"
-                        label="Car Fuel "
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        value={carFuel}
-                        onChange={(event) => setFuel(event.target.value)}
-                    />
-
-                    <div>
-                        <Button
-                            component="label"
-                            role={undefined}
-                            variant="contained"
-                            tabIndex={-1}
-                            startIcon={<CloudUploadIcon />}
-                            onChange={changeImage}
-                            sx={{ display: 'flex', justifyContent: 'space-between' }}
-                        >
-                            Upload image
-                            <VisuallyHiddenInput type="file" />
-                        </Button>
-
-                        <img src={img} width={"40%"} height={"60%"} alt="" />
-
-                    </div>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Button color="success" variant="contained" onClick={() => saveUpdate(car)} sx={{ marginRight: 30 }}>Save</Button>
-                        <Button variant="outlined" color="error" onClick={handleClear}>Clear</Button>
-                    </Box>
-
-
-                </DialogContent>
-
-            </StyledDialog>
-        </React.Fragment>
-
-    )
-}
