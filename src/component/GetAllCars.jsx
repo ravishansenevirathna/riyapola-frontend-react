@@ -24,6 +24,7 @@ export default function GetAllCars() {
   const handleOpenUpAlert = (car) => {
     setSelectedCar(car);
     setOpenAlert(true)
+    
   }
 
 
@@ -146,6 +147,7 @@ export default function GetAllCars() {
 
       {openAlert && (
         <DialogBox
+          refresh={()=> getAllCars()}
           handleClose={() => setOpenAlert(false)}
           open={openAlert}
           car={selectedCar}

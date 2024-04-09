@@ -13,6 +13,8 @@ import Swal from 'sweetalert2'
 import { Box } from '@mui/material';
 
 
+
+
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
@@ -52,7 +54,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 
 
 
-export default function DialogBox({ open, handleClose, car }) {
+export default function DialogBox({ open, handleClose, car, refresh }) {
 
     const [carId, setCarId] = useState(car?.carId || '');
     const [carBrand, setBrand] = useState(car?.carBrand || '');
@@ -88,10 +90,8 @@ export default function DialogBox({ open, handleClose, car }) {
 
                 if (img) { // Check if there's an image selected
                     data.append('imageName', car_image); // Include image if available
-                }
 
-
-                const url = `carImage/updateCarImage/${car.carImageId}`;
+                    const url = `carImage/updateCarImage/${car.carImageId}`;
                 instance.put(url, data, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -107,6 +107,8 @@ export default function DialogBox({ open, handleClose, car }) {
                             text: "Your work has been saved!",
                             icon: "success",
                         })
+                        refresh()
+
 
                     })
 
@@ -119,6 +121,9 @@ export default function DialogBox({ open, handleClose, car }) {
                             icon: "warning",
                         })
                     });
+                }else{
+                    refresh()
+                }
                 })
                     .catch(function (error) {
                         console.log("image ekk dann");
