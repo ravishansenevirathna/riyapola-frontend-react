@@ -62,6 +62,7 @@ export default function DialogBox({ open, handleClose, car }) {
     const [carFuel, setFuel] = useState(car?.carFuelType || '');
     const [car_image, setImage] = useState("");
     const [car_image_id, setImageId] = useState(car?.carImageId || '')
+    
 
 
 
@@ -88,6 +89,8 @@ export default function DialogBox({ open, handleClose, car }) {
                 if (img) { // Check if there's an image selected
                     data.append('imageName', car_image); // Include image if available
                 }
+
+
                 const url = `carImage/updateCarImage/${car.carImageId}`;
                 instance.put(url, data, {
                     headers: {
@@ -106,6 +109,16 @@ export default function DialogBox({ open, handleClose, car }) {
                         })
 
                     })
+
+                    .catch(function (error) {
+                        console.log("there was no image included");
+                        console.log(error);
+                        Swal.fire({
+                            title: 'warning',
+                            text: "Car details has been saved without updating an Image!",
+                            icon: "warning",
+                        })
+                    });
                 })
                     .catch(function (error) {
                         console.log("image ekk dann");
@@ -116,6 +129,8 @@ export default function DialogBox({ open, handleClose, car }) {
                             icon: "error",
                         })
                     });
+
+                    
 
                 console.log('Car details:', {
                     carBrand,
