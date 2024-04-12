@@ -17,10 +17,6 @@ const columns = [
   
   ];
   
-  const rows = [
-    { id: 1, Name: 'Dinuka', Email: 'Jon@gmail.com', TelephoneNumber: "0773370653" },
-   
-  ];
   
 
 export default function Customer() {

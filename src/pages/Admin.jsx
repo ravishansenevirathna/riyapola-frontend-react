@@ -1,45 +1,213 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import GroupsIcon from '@mui/icons-material/Groups';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import { useEffect } from 'react';
+import instance from '../service/ServiceOrder';
+import { useState } from 'react';
+import Button from '@mui/material/Button';
+import SendIcon from '@mui/icons-material/Send';
+import Swal from 'sweetalert2'
 
 const columns = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'firstName', headerName: 'First name', width: 130 },
-    { field: 'lastName', headerName: 'Last name', width: 130 },
+    { field: 'id', headerName: 'ID', width: 50 },
+    { field: 'startDate', headerName: 'Start Date', width: 110 },
+    { field: 'startTime', headerName: 'Start Time', width: 110 },
+    { field: 'endDate', headerName: 'End Date', width: 110 },
+    { field: 'endTime', headerName: 'End Time', width: 110 },
+    { field: 'pickUpLocation', headerName: 'Pick Up Location', width: 140 },
+    { field: 'carId', headerName: 'Car Id', width: 70 },
+    { field: 'customerId', headerName: 'Cus Id', width: 70 },
+    { field: 'status', headerName: 'Status', width: 100 },
     {
-        field: 'age',
-        headerName: 'Age',
-        type: 'number',
-        width: 90,
-    },
-    {
-        field: 'fullName',
-        headerName: 'Full name',
-        description: 'This column has a value getter and is not sortable.',
+        field: 'action',
+        headerName: 'Approve',
         sortable: false,
-        width: 160,
-        valueGetter: (params) =>
-            `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-    },
-];
+        width: 130,
+        renderCell: (params) => (
+          <Button variant="contained" color="success" endIcon={<SendIcon />} onClick={() => sentMail(params.row)}>approve</Button>
+        ),
+      },
+      {
+        field: 'declineAction',
+        headerName: 'Decline',
+        sortable: false,
+        width: 130,
+        renderCell: (params) => (
+          <Button variant="outlined" color="error" onClick={() => declineMail(params.row)}>decline</Button>
+        ),
+      },
+    ];
 
-const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
+
+
+
+
+    // const sentMail = (reservation) => {
+
+    //   const url = `/customer/searchCustomer/${reservation.customerId}`;
+    //   instance.get(url)
+    //       .then(function(response){
+    //         const customerEmail = response.data.email;
+
+    //         const subject = Swal.fire({
+    //           title: 'Enter Email Subject',
+    //           input: 'text',
+    //           inputPlaceholder: 'Subject',
+    //           showCancelButton: true
+    //         }).then((result) => {
+    //           return result.value;
+    //         });
+
+    //         if (subject) {
+    //           const message = Swal.fire({
+    //             title: 'Compose Email Message',
+    //             input: 'textarea',
+    //             inputLabel: 'Message',
+    //             inputPlaceholder: 'Type your message here...',
+    //             inputAttributes: {
+    //               "aria-label": "Type your message here"
+    //             },
+    //             showCancelButton: true
+    //           }).then((result) => {
+    //             return result.value;
+    //           });
+    //       })
+    //       .catch(function (error){
+    //         console.log(error);
+    //       })
+      
+    // };
+
+    const sentMail = async (reservation) => {
+      console.log(reservation);
+    
+      const url = `/customer/searchCustomer/${reservation.customerId}`;
+      try {
+        const response = await instance.get(url);
+        const customerEmail = response.data.email;
+    
+        const subject = await Swal.fire({
+          title: 'Enter Email Subject',
+          input: 'text',
+          inputPlaceholder: 'Subject',
+          showCancelButton: true
+        }).then((result) => {
+          return result.value;
+        });
+    
+        if (subject) {
+          const message = await Swal.fire({
+            title: 'Compose Email Message',
+            input: 'textarea',
+            inputLabel: 'Message',
+            inputPlaceholder: 'Type your message here...',
+            inputAttributes: {
+              "aria-label": "Type your message here"
+            },
+            showCancelButton: true
+          }).then((result) => {
+            return result.value;
+          });
+    
+          if (message) {
+            const emailData = {
+              toMail: customerEmail,
+              subject: subject,
+              message:message
+            };
+    
+            await instance.post('/reservation/send/mail', emailData);
+    
+            Swal.fire("Email Sent Successfully!");
+          } else {
+            Swal.fire("Please enter a message.");
+          }
+        } else {
+          Swal.fire("Please enter a subject.");
+        }
+      } catch (error) {
+        console.error(error);
+        Swal.fire("Error sending email!", error.message, "error");
+      }
+    };
+
+
+    
+
+
+
+
+    const declineMail = (reservation) => {
+      const reservationId = reservation.id
+      const subject = "car not available"
+      
+      Swal.fire({
+        title: 'Are You sure?',
+        text: 'Your data will be lost!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          instance({
+            method: 'delete',
+            url: '/car/deleteCar/' + carId,
+          })
+            .then(function (response) {
+              console.log(response);
+  
+  
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+  
+        }
+      });
+    };
+
+    
+
+
 
 
 export default function Admin() {
+
+    const[row,setRow] = useState([])
+
+    useEffect(() => {
+        instance.get("/reservation/getAllReservations")
+        .then(function(response){
+          console.log("response is",response.data);
+          const array = [];
+          response.data?.map((val) => {
+            array.push({
+                id: val.reservationId,
+                startDate: val.startDate,
+                startTime: val.startTime,
+                endDate: val.endDate,
+                endTime: val.endTime,
+                pickUpLocation: val.pickUpLocation,
+                carId: val.carId,
+                customerId: val.customerId,
+                status: val.status,
+            })
+          })
+          setRow(array);
+          console.log("array is ",array);
+        })
+        .catch(function (error){
+          console.log("your error is",error);
+        })
+        
+        
+      }, []);
+
+
     return (
 
         <div style={{ height: 400, width: '100%' }}>
@@ -54,14 +222,14 @@ export default function Admin() {
             <br />
             
             <DataGrid
-                rows={rows}
+                rows={row}
                 columns={columns}
                 initialState={{
                     pagination: {
                         paginationModel: { page: 0, pageSize: 5 },
                     },
                 }}
-                pageSizeOptions={[5, 10]}
+                pageSizeOptions={[5,10]}
                 checkboxSelection
             />
         </div>

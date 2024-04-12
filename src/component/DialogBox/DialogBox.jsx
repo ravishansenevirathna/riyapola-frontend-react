@@ -107,7 +107,8 @@ export default function DialogBox({ open, handleClose, car, refresh }) {
                             text: "Your work has been saved!",
                             icon: "success",
                         })
-                        refresh()
+                       
+                        
 
 
                     })
