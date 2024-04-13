@@ -42,46 +42,7 @@ const columns = [
 
 
 
-
-
-    // const sentMail = (reservation) => {
-
-    //   const url = `/customer/searchCustomer/${reservation.customerId}`;
-    //   instance.get(url)
-    //       .then(function(response){
-    //         const customerEmail = response.data.email;
-
-    //         const subject = Swal.fire({
-    //           title: 'Enter Email Subject',
-    //           input: 'text',
-    //           inputPlaceholder: 'Subject',
-    //           showCancelButton: true
-    //         }).then((result) => {
-    //           return result.value;
-    //         });
-
-    //         if (subject) {
-    //           const message = Swal.fire({
-    //             title: 'Compose Email Message',
-    //             input: 'textarea',
-    //             inputLabel: 'Message',
-    //             inputPlaceholder: 'Type your message here...',
-    //             inputAttributes: {
-    //               "aria-label": "Type your message here"
-    //             },
-    //             showCancelButton: true
-    //           }).then((result) => {
-    //             return result.value;
-    //           });
-    //       })
-    //       .catch(function (error){
-    //         console.log(error);
-    //       })
-      
-    // };
-
     const sentMail = async (reservation) => {
-      console.log(reservation);
     
       const url = `/customer/searchCustomer/${reservation.customerId}`;
       try {
@@ -119,8 +80,9 @@ const columns = [
             };
     
             await instance.post('/reservation/send/mail', emailData);
-    
             Swal.fire("Email Sent Successfully!");
+           
+
           } else {
             Swal.fire("Please enter a message.");
           }
@@ -131,6 +93,26 @@ const columns = [
         console.error(error);
         Swal.fire("Error sending email!", error.message, "error");
       }
+
+       const updateData = {
+              status: "approved"
+            };
+
+      instance({
+        method: 'put',
+        url: '/reservation/updateReservation/' + reservation.id,
+        data: updateData
+      })
+        .then(function (response) {
+          console.log(response);
+
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+
     };
 
 
@@ -140,8 +122,11 @@ const columns = [
 
 
     const declineMail = (reservation) => {
-      const reservationId = reservation.id
-      const subject = "car not available"
+      const reservationId = reservation.id;
+      const subject = "car not available";
+      const updateData = {
+        status: "declined"
+      };
       
       Swal.fire({
         title: 'Are You sure?',
@@ -150,12 +135,14 @@ const columns = [
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'Yes, decline it!',
       }).then((result) => {
         if (result.isConfirmed) {
+          
           instance({
-            method: 'delete',
-            url: '/car/deleteCar/' + carId,
+            method: 'put',
+            url: '/reservation/updateReservation/' + reservationId,
+            data: updateData
           })
             .then(function (response) {
               console.log(response);
@@ -182,7 +169,7 @@ export default function Admin() {
     useEffect(() => {
         instance.get("/reservation/getAllReservations")
         .then(function(response){
-          console.log("response is",response.data);
+          
           const array = [];
           response.data?.map((val) => {
             array.push({
