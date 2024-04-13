@@ -81,6 +81,8 @@ const columns = [
     
             await instance.post('/reservation/send/mail', emailData);
             Swal.fire("Email Sent Successfully!");
+            window.location.reload();
+
            
 
           } else {
@@ -105,8 +107,7 @@ const columns = [
       })
         .then(function (response) {
           console.log(response);
-
-
+          
         })
         .catch(function (error) {
           console.log(error);
@@ -116,50 +117,101 @@ const columns = [
     };
 
 
-    
 
-
-
-
-    const declineMail = (reservation) => {
-      const reservationId = reservation.id;
-      const subject = "car not available";
-      const updateData = {
-        status: "declined"
-      };
+    const declineMail = async (reservation) => {
       
-      Swal.fire({
-        title: 'Are You sure?',
-        text: 'Your data will be lost!',
+      const confirmation = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'This will decline the reservation and send an email to the customer.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, decline it!',
-      }).then((result) => {
-        if (result.isConfirmed) {
-          
-          instance({
-            method: 'put',
-            url: '/reservation/updateReservation/' + reservationId,
-            data: updateData
-          })
-            .then(function (response) {
-              console.log(response);
-  
-  
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-  
-        }
       });
-    };
 
+      if (!confirmation.isConfirmed) {
+        return; // User canceled
+      }
+
+
+      try {
+        // Update reservation status to declined on the backend
+        const updateResponse = await instance.put(`/reservation/updateReservation/${reservation.id}`, {
+          status: 'declined',
+        });
+        
+
+        if (updateResponse.status === 200) {
+          // Success: Send email and (optionally) refetch data
     
+          // Fetch customer email (assuming separate API call for efficiency)
+          const customerEmailResponse = await instance.get(`/customer/searchCustomer/${reservation.customerId}`);
+          const customerEmail = customerEmailResponse.data.email;
+    
+          // Prepare email data
+          const emailData = {
+            toMail: customerEmail,
+            subject: 'Car Unavailable for Reservation', // More descriptive subject
+            message: 'We regret to inform you that your car reservation is unavailable at this time. Please try again another time or contact us for assistance.',
+          };
+
+            // Send email (assuming success handling is done elsewhere)
+      await instance.post('/reservation/send/mail', emailData);
+
+      Swal.fire('Success!', 'Reservation declined and email sent.', 'success');
+      window.location.reload();
+
+      // Optionally, refetch reservations to update table data (see Admin component)
+    }
+
+    else {
+      console.error('Error updating reservation status:', updateResponse.data);
+      Swal.fire('Error!', 'Failed to decline reservation.', 'error');
+    }
+  } catch (error) {
+    console.error('Error declining reservation:', error);
+    Swal.fire('Error!', 'Something went wrong during decline.', 'error');
+  }
+};
 
 
+    //   .then((result) => {
+    //     if (result.isConfirmed) {
+          
+    //       instance({
+    //         method: 'put',
+    //         url: '/reservation/updateReservation/' + reservationId,
+    //         data: updateData
+    //       })
+    //         .then(function (response) {
+              
+    //           const url = `/customer/searchCustomer/${reservation.customerId}`;
+    //           const responseData = instance.get(url);
+    //           console.log("response isssss",responseData);
+    //           const customerEmail = responseData.data.email;
+
+    //           const subject = 'your car not available';
+    //           const message ='please try angain another time line';
+    //           const emailData = {
+    //             toMail: customerEmail,
+    //             subject: subject,
+    //             message:message
+    //           };
+      
+    //           instance.post('/reservation/send/mail', emailData);
+    //           Swal.fire("Email Sent Successfully!");
+              
+  
+  
+    //         })
+    //         .catch(function (error) {
+    //           console.log(error);
+    //         });
+  
+    //     }
+    //   });
+    // };
 
 
 export default function Admin() {
@@ -167,6 +219,10 @@ export default function Admin() {
     const[row,setRow] = useState([])
 
     useEffect(() => {
+      fetchReservations();
+  }, []);
+
+      const fetchReservations = () => {
         instance.get("/reservation/getAllReservations")
         .then(function(response){
           
@@ -190,10 +246,13 @@ export default function Admin() {
         .catch(function (error){
           console.log("your error is",error);
         })
+      }
         
-        
-      }, []);
 
+
+
+  
+    
 
     return (
 
@@ -220,7 +279,5 @@ export default function Admin() {
                 checkboxSelection
             />
         </div>
-
-
     )
 }
