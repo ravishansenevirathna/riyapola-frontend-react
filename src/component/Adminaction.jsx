@@ -34,35 +34,6 @@ export default function Adminaction() {
     const [car_image, setImage] = useState("");
 
 
-    // const save = () => {
-    //     const data = new FormData();
-
-    //     data.append('brand', car_brand)
-    //     data.append('model', car_model)
-    //     data.append('year', car_year)
-    //     data.append('engineCap', car_engineCap)
-    //     data.append('fuelType', car_fuel)
-    //     data.append('imageName', car_image)
-
-    //     instance.post("/car/addNewCar", data, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data'
-    //         }
-    //     })
-    //         .then(function (response) {
-    //             console.log(response);
-    //             Swal.fire({
-    //                 title: 'Saved',
-    //                 text: "Your work has been saved!",
-    //                 icon: "success",
-    //             })
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         });
-
-    // };
-
 
     const carSave = () => {
 
@@ -169,7 +140,7 @@ export default function Adminaction() {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(2, 1fr)',
                     gap: 3,
-                    // Other spacing adjustments as needed
+                    
                 }}
                 noValidate
                 autoComplete="off"

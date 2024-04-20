@@ -131,38 +131,36 @@ const columns = [
       });
 
       if (!confirmation.isConfirmed) {
-        return; // User canceled
+        return; 
       }
 
 
       try {
-        // Update reservation status to declined on the backend
+        
         const updateResponse = await instance.put(`/reservation/updateReservation/${reservation.id}`, {
           status: 'declined',
         });
         
 
         if (updateResponse.status === 200) {
-          // Success: Send email and (optionally) refetch data
-    
-          // Fetch customer email (assuming separate API call for efficiency)
+          
           const customerEmailResponse = await instance.get(`/customer/searchCustomer/${reservation.customerId}`);
           const customerEmail = customerEmailResponse.data.email;
     
-          // Prepare email data
+          
           const emailData = {
             toMail: customerEmail,
-            subject: 'Car Unavailable for Reservation', // More descriptive subject
+            subject: 'Car Unavailable for Reservation',
             message: 'We regret to inform you that your car reservation is unavailable at this time. Please try again another time or contact us for assistance.',
           };
 
-            // Send email (assuming success handling is done elsewhere)
+           
       await instance.post('/reservation/send/mail', emailData);
 
       Swal.fire('Success!', 'Reservation declined and email sent.', 'success');
       window.location.reload();
 
-      // Optionally, refetch reservations to update table data (see Admin component)
+     
     }
 
     else {
@@ -176,42 +174,6 @@ const columns = [
 };
 
 
-    //   .then((result) => {
-    //     if (result.isConfirmed) {
-          
-    //       instance({
-    //         method: 'put',
-    //         url: '/reservation/updateReservation/' + reservationId,
-    //         data: updateData
-    //       })
-    //         .then(function (response) {
-              
-    //           const url = `/customer/searchCustomer/${reservation.customerId}`;
-    //           const responseData = instance.get(url);
-    //           console.log("response isssss",responseData);
-    //           const customerEmail = responseData.data.email;
-
-    //           const subject = 'your car not available';
-    //           const message ='please try angain another time line';
-    //           const emailData = {
-    //             toMail: customerEmail,
-    //             subject: subject,
-    //             message:message
-    //           };
-      
-    //           instance.post('/reservation/send/mail', emailData);
-    //           Swal.fire("Email Sent Successfully!");
-              
-  
-  
-    //         })
-    //         .catch(function (error) {
-    //           console.log(error);
-    //         });
-  
-    //     }
-    //   });
-    // };
 
 
 export default function Admin() {

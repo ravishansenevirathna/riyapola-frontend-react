@@ -27,8 +27,6 @@ export default function App() {
 
   },[]);
 
-  // console.log(localStorage.getItem("stmToken"))
-
 
   return (
     <div>
