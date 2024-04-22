@@ -1,0 +1,24 @@
+
+/* Customer.css */
+
+.customer-container {
+    width: 100%; /* Ensures full width on all screens */
+    margin: 0 auto; /* Centers the content horizontally */
+  }
+  
+  /* Styles for smaller screens (e.g., mobile) */
+  @media (max-width: 768px) {
+    .customer-container {
+      padding: 8px; /* Reduce padding for smaller screens */
+    }
+  
+    .MuiDataGrid-root { /* Adjust DataGrid styles for mobile */
+      font-size: 0.8rem; /* Reduce font size */
+    }
+  
+    .MuiDataGrid-columnHeader { /* Adjust column headers for mobile */
+      white-space: nowrap; /* Prevent text wrapping in headers */
+    }
+  }
+  
+  /* You can add more media queries for different screen sizes as needed */
